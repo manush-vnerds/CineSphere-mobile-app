@@ -12,7 +12,7 @@ class HeroSection extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/hero_background.png',
+              'assets/images/hero_background.jpg',
               fit: BoxFit.cover,
             ),
           ),

@@ -85,3 +85,17 @@ class MoviesResponse {
     );
   }
 }
+
+class MovieSuggestion {
+  const MovieSuggestion({required this.id, required this.title});
+
+  final String id;
+  final String title;
+
+  factory MovieSuggestion.fromJson(Map<String, dynamic> json) {
+    return MovieSuggestion(
+      id: json['_id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+    );
+  }
+}
