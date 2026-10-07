@@ -1,4 +1,4 @@
-import 'package:cine_sphere/screens/main_screen.dart';
+import 'package:cine_sphere/screens/auth_gate.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
         fontFamily: 'Roboto',
       ),
-      home: const MainScreen(),
+      home: const AuthGate(),
     );
   }
 }

@@ -39,9 +39,7 @@ class MovieApi {
     final movies = responseJson['movies'] as List<dynamic>? ?? const [];
 
     return movies
-        .map(
-          (movie) => MovieSuggestion.fromJson(movie as Map<String, dynamic>),
-        )
+        .map((movie) => MovieSuggestion.fromJson(movie as Map<String, dynamic>))
         .toList();
   }
 

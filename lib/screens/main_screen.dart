@@ -1,8 +1,19 @@
+import 'package:cine_sphere/models/auth_session.dart';
 import 'package:cine_sphere/screens/home_screen.dart';
+import 'package:cine_sphere/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({
+    super.key,
+    required this.session,
+    required this.authService,
+    required this.onLoggedOut,
+  });
+
+  final AuthSession session;
+  final AuthService authService;
+  final VoidCallback onLoggedOut;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -10,6 +21,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
+
+  Future<void> _logout() async {
+    await widget.authService.logout();
+    if (mounted) widget.onLoggedOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +34,19 @@ class _MainScreenState extends State<MainScreen> {
         title: Text("CineShpere"),
         backgroundColor: const Color.fromARGB(255, 145, 138, 138),
         actions: [
-          IconButton(
-            onPressed: () => {print("Profile prassed")},
+          PopupMenuButton<String>(
             icon: const Icon(Icons.person),
+            onSelected: (value) {
+              if (value == 'logout') _logout();
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                enabled: false,
+                value: 'email',
+                child: Text(widget.session.email),
+              ),
+              const PopupMenuItem<String>(value: 'logout', child: Text('Logout')),
+            ],
           ),
         ],
       ),
@@ -46,10 +73,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.contact_support),
             label: "Contact Us",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings),
-            label: "Admin",
-          ),
+          if (widget.session.isAdmin)
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.admin_panel_settings),
+              label: 'Admin',
+            ),
         ],
       ),
     );
