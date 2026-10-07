@@ -44,4 +44,40 @@ class MovieApi {
         )
         .toList();
   }
+
+  static Future<Movie> fetchMovieById(String movieId) async {
+    final response = await http.get(Uri.parse('${_baseUrl}movies/$movieId'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load movie details: ${response.statusCode}');
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = responseJson['data'];
+
+    if (data is List && data.isNotEmpty) {
+      return Movie.fromJson(data.first as Map<String, dynamic>);
+    }
+
+    if (data is Map<String, dynamic>) {
+      return Movie.fromJson(data);
+    }
+
+    throw Exception('Movie details were not found.');
+  }
+
+  static Future<List<MovieReview>> fetchReviews(String movieId) async {
+    final response = await http.get(Uri.parse('${_baseUrl}revies/$movieId'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load reviews: ${response.statusCode}');
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final reviews = responseJson['review'] as List<dynamic>? ?? const [];
+
+    return reviews
+        .map((review) => MovieReview.fromJson(review as Map<String, dynamic>))
+        .toList();
+  }
 }

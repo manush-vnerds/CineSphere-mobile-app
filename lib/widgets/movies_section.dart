@@ -3,9 +3,14 @@ import 'package:cine_sphere/services/movie_api.dart';
 import 'package:flutter/material.dart';
 
 class MoviesSection extends StatefulWidget {
-  const MoviesSection({super.key, required this.searchQuery});
+  const MoviesSection({
+    super.key,
+    required this.searchQuery,
+    required this.onMovieSelected,
+  });
 
   final String searchQuery;
+  final ValueChanged<Movie> onMovieSelected;
 
   @override
   State<MoviesSection> createState() => _MoviesSectionState();
@@ -76,7 +81,10 @@ class _MoviesSectionState extends State<MoviesSection> {
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _MovieCard(movie: movies[index]),
+              (context, index) => _MovieCard(
+                movie: movies[index],
+                onTap: () => widget.onMovieSelected(movies[index]),
+              ),
               childCount: movies.length,
             ),
           ),
@@ -87,9 +95,10 @@ class _MoviesSectionState extends State<MoviesSection> {
 }
 
 class _MovieCard extends StatelessWidget {
-  const _MovieCard({required this.movie});
+  const _MovieCard({required this.movie, required this.onTap});
 
   final Movie movie;
+  final VoidCallback onTap;
 
   static const _imageBaseUrl =
       'https://cinesphere-movie-ticket-booking-backend.onrender.com/';
@@ -104,7 +113,7 @@ class _MovieCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: const Color(0xFF15243A),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: SizedBox(
           height: 165,
           child: Row(
@@ -158,7 +167,7 @@ class _MovieCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${movie.rating}/5',
+                            '${movie.rating.toStringAsFixed(1)}/5',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

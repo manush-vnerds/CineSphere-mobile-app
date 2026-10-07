@@ -1,4 +1,5 @@
 import 'package:cine_sphere/services/movie_api.dart';
+import 'package:cine_sphere/screens/movie_detail_screen.dart';
 import 'package:cine_sphere/widgets/movie_search_bar.dart';
 import 'package:cine_sphere/widgets/movies_section.dart';
 import 'package:cine_sphere/widgets/searchbar_header_delegate.dart';
@@ -38,14 +39,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 onSelected: (movie) {
                   _searchTermController.text = movie.title;
                   setState(() {});
-                  debugPrint('Selected movie ID: ${movie.id}');
+                  _openMovieDetails(movie.id);
                 },
               ),
             ),
           ),
-          MoviesSection(searchQuery: _searchTermController.text),
+          MoviesSection(
+            searchQuery: _searchTermController.text,
+            onMovieSelected: (movie) => _openMovieDetails(movie.id),
+          ),
         ],
       ),
+    );
+  }
+
+  void _openMovieDetails(String movieId) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => MovieDetailScreen(movieId: movieId)),
     );
   }
 }

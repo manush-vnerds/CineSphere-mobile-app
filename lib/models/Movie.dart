@@ -99,3 +99,36 @@ class MovieSuggestion {
     );
   }
 }
+
+class MovieReview {
+  const MovieReview({
+    required this.id,
+    required this.movieId,
+    required this.userName,
+    required this.rating,
+    required this.comment,
+    required this.createdAt,
+  });
+
+  final String id;
+  final String movieId;
+  final String userName;
+  final double rating;
+  final String comment;
+  final DateTime createdAt;
+
+  factory MovieReview.fromJson(Map<String, dynamic> json) {
+    final user = json['userId'] as Map<String, dynamic>?;
+
+    return MovieReview(
+      id: json['_id'] as String? ?? '',
+      movieId: json['movieId'] as String? ?? '',
+      userName: user?['name'] as String? ?? 'Anonymous',
+      rating: (json['rating'] as num?)?.toDouble() ?? 0,
+      comment: json['comment'] as String? ?? '',
+      createdAt:
+          DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+    );
+  }
+}
