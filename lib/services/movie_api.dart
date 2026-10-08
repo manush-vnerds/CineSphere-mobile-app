@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cine_sphere/models/Movie.dart';
+import 'package:cine_sphere/models/show.dart';
 import 'package:http/http.dart' as http;
 
 class MovieApi {
@@ -76,6 +77,21 @@ class MovieApi {
 
     return reviews
         .map((review) => MovieReview.fromJson(review as Map<String, dynamic>))
+        .toList();
+  }
+
+  static Future<List<Show>> fetchShowtimes(String movieId) async {
+    final response = await http.get(Uri.parse('${_baseUrl}showtimes/$movieId'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load showtimes: ${response.statusCode}');
+    }
+
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final shows = responseJson['data'] as List<dynamic>? ?? const [];
+
+    return shows
+        .map((show) => Show.fromJson(show as Map<String, dynamic>))
         .toList();
   }
 }

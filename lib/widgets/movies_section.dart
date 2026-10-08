@@ -1,32 +1,20 @@
 import 'package:cine_sphere/models/Movie.dart';
-import 'package:cine_sphere/services/movie_api.dart';
 import 'package:flutter/material.dart';
 
-class MoviesSection extends StatefulWidget {
+class MoviesSection extends StatelessWidget {
   const MoviesSection({
     super.key,
     required this.searchQuery,
+    required this.moviesFuture,
     required this.onMovieSelected,
   });
 
   final String searchQuery;
+  final Future<List<Movie>> moviesFuture;
   final ValueChanged<Movie> onMovieSelected;
 
-  @override
-  State<MoviesSection> createState() => _MoviesSectionState();
-}
-
-class _MoviesSectionState extends State<MoviesSection> {
-  late final Future<List<Movie>> _moviesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _moviesFuture = MovieApi.fetchMovies();
-  }
-
   List<Movie> _filterMovies(List<Movie> movies) {
-    final query = widget.searchQuery.trim().toLowerCase();
+    final query = searchQuery.trim().toLowerCase();
 
     if (query.isEmpty) {
       return movies;
@@ -42,7 +30,7 @@ class _MoviesSectionState extends State<MoviesSection> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Movie>>(
-      future: _moviesFuture,
+      future: moviesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SliverFillRemaining(
@@ -83,7 +71,7 @@ class _MoviesSectionState extends State<MoviesSection> {
             delegate: SliverChildBuilderDelegate(
               (context, index) => _MovieCard(
                 movie: movies[index],
-                onTap: () => widget.onMovieSelected(movies[index]),
+                onTap: () => onMovieSelected(movies[index]),
               ),
               childCount: movies.length,
             ),

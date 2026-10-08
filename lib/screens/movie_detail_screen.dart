@@ -1,4 +1,5 @@
 import 'package:cine_sphere/models/Movie.dart';
+import 'package:cine_sphere/screens/booking_screen.dart';
 import 'package:cine_sphere/services/movie_api.dart';
 import 'package:flutter/material.dart';
 
@@ -143,7 +144,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       width: double.infinity,
                       height: 52,
                       child: FilledButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => BookingScreen(movie: movie),
+                            ),
+                          );
+                        },
                         child: const Text('Book Now'),
                       ),
                     ),
